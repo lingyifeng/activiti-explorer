@@ -37,7 +37,20 @@
         <bean class="org.activiti.explorer.form.MonthFormType"/>
       </list>
     </property>
+    <!--自定义用户、用户组的配置 -->
+    <property name="customSessionFactories">
+      <list>
+        <bean class="org.activiti.explorer.service.CustomUserEntityManagerFactory" >
+          <property name="customUserEntityManager" ref="customUserEntityManager"/>
+        </bean>
+        <bean class="org.activiti.explorer.service.CustomGroupEntityManagerFactory" >
+          <property name="customGroupEntityManager" ref="customGroupEntityManager"/>
+        </bean>
+      </list>
+    </property>
   </bean>
+  <bean id="customUserEntityManager" class="org.activiti.explorer.conf.CustomUserEntityManager"/>
+  <bean id="customGroupEntityManager" class="org.activiti.explorer.conf.CustomGroupEntityManager"/>
 
   <bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean" destroy-method="destroy">
   	<property name="processEngineConfiguration" ref="processEngineConfiguration" />
@@ -50,5 +63,23 @@
   <bean id="historyService" factory-bean="processEngine" factory-method="getHistoryService" />
   <bean id="managementService" factory-bean="processEngine" factory-method="getManagementService" />
   <bean id="identityService" factory-bean="processEngine" factory-method="getIdentityService" />
-  
+  <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    <property name="dataSource" ref="dataSource" />
+    <!-- 自动扫描mapping.xml文件 -->
+
+    <property name="mapperLocations" value="classpath*:mapper/*.xml"></property>
+  </bean>
+  <!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 结束-->
+
+  <!-- 配置SqlSessionTemplate开始 -->
+  <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+    <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />
+  </bean>
+  <!-- 配置SqlSessionTemplate结束-->
+
+  <!-- DAO接口所在包名，Spring会自动查找其下的类 -->
+  <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <property name="basePackage" value="org.activiti.explorer.mapper" />
+    <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+  </bean>
 </beans>

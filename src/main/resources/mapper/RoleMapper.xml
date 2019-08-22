@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.activiti.explorer.mapper.RoleMapper">
+    <resultMap id="BaseResultMap" type="org.activiti.explorer.model.Role">
+        <id column="r2id" property="id" />
+        <result column="r2role_name" property="roleName" />
+        <result column="r2p_id" property="pId" />
+        <result column="r2sort_num" property="sortNum" />
+        <result column="r2status" property="status" />
+        <result column="r2tips" property="tips" />
+        <result column="r2create_time" property="createTime" />
+        <result column="r2is_del" property="isDel" />
+        <result column="r2version" property="version" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        r2.id AS r2id, r2.role_name AS r2role_name, r2.p_id AS r2p_id, r2.sort_num AS r2sort_num, r2.status AS r2status, r2.tips AS r2tips, r2.create_time AS r2create_time, r2.is_del AS r2is_del, r2.version AS r2version
+    </sql>
+
+    <select id="getGroupByAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_user
+        inner join sys_user_role on sys_user_role.user_id=sys_user.id
+        inner join sys_role as r2 on sys_user_role.role_id=r2.id
+        where sys_user.account =#{account,jdbcType=VARCHAR}
+    </select>
+
+</mapper>

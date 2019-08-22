@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.activiti.explorer.mapper.UserMapper">
+
+
+    <!-- 通用查询结果列 -->
+    <resultMap id="BaseResultMap" type="org.activiti.explorer.model.User">
+        <id column="id" property="id" />
+        <result column="account" property="account" />
+        <result column="name" property="name" />
+        <result column="code" property="code" />
+        <result column="password" property="password" />
+        <result column="salt" property="salt" />
+        <result column="dept_id" property="deptId" />
+        <result column="dept_full_name" property="deptFullName" />
+        <result column="dept_short_name" property="deptShortName" />
+        <result column="dept_code" property="deptCode" />
+        <result column="sex" property="sex" />
+        <result column="birthday" property="birthday" />
+        <result column="email" property="email" />
+        <result column="phone" property="phone" />
+        <result column="avatar_url" property="avatarUrl" />
+        <result column="position" property="position" />
+        <result column="status" property="status" />
+        <result column="tips" property="tips" />
+        <result column="create_time" property="createTime" />
+        <result column="is_del" property="isDel" />
+        <result column="version" property="version" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        u.id, u.account, u.name, u.code, u.password, u.salt, u.dept_id, u.dept_full_name, u.dept_short_name, u.dept_code, u.sex, u.birthday, u.email, u.phone, u.avatar_url, u.position, u.status AS status, u.tips, u.create_time, u.is_del, u.version
+    </sql>
+<select id="getUserByAccount" parameterType="java.lang.String" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List"/>
+    from sys_user as u
+    where u.account = #{account,jdbcType=VARCHAR}
+</select>
+
+    <select id="getUsersByAccountLike" parameterType="java.util.Map" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from sys_user as u
+        <if test="groups!=null">
+            inner join sys_user_role on sys_user_role.user_id=u.id
+            inner join sys_role on sys_role.id=sys_user_role.role_id
+        </if>
+        where 1=1
+        <if test="account!=null">
+            and u.account = #{account,jdbcType=VARCHAR}
+        </if>
+      <if test="fullnamelike!=null">
+          and u.account like #{fullnamelike,jdbcType=VARCHAR}
+      </if>
+        <if test="groups!=null">
+            and sys_role.role_name in
+            <foreach collection="groups" index="index" item="item" close=")" open="(" separator=",">
+                #{item}
+            </foreach>
+        </if>
+    </select>
+</mapper>
