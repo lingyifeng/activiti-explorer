@@ -57,7 +57,9 @@ public class CustomUserEntityManager extends UserEntityManager {
             for (Group group : list) {
                 groups.add(group.getId());
             }
-            map.put("groups", groups);
+            if(groups.size()>0) {
+                map.put("groups", groups);
+            }
         }
         List<User> user = userMapper.getUsersByAccountLike(map);
         ArrayList<org.activiti.engine.identity.User> list = new ArrayList<org.activiti.engine.identity.User>();
