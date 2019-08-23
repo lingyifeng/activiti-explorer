@@ -51,16 +51,16 @@ public class CustomUserEntityManager extends UserEntityManager {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put("account", query.getId());
         map.put("fullnamelike", query.getFullNameLike());
-        if (ExplorerApp.get().getLoggedInUser() != null) {
-            List<String> groups = new ArrayList<String>();
-            List<Group> list = ExplorerApp.get().getLoggedInUser().getGroups();
-            for (Group group : list) {
-                groups.add(group.getId());
-            }
-            if(groups.size()>0) {
-                map.put("groups", groups);
-            }
-        }
+//        if (ExplorerApp.get().getLoggedInUser() != null) {
+//            List<String> groups = new ArrayList<String>();
+//            List<Group> list = ExplorerApp.get().getLoggedInUser().getGroups();
+//            for (Group group : list) {
+//                groups.add(group.getId());
+//            }
+//            if(groups.size()>0) {
+//                map.put("groups", groups);
+//            }
+//        }
         List<User> user = userMapper.getUsersByAccountLike(map);
         ArrayList<org.activiti.engine.identity.User> list = new ArrayList<org.activiti.engine.identity.User>();
         for (User user1 : user) {
