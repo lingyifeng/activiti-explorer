@@ -22,4 +22,5 @@ var ACTIVITI = ACTIVITI || {};
 
 ACTIVITI.CONFIG = {
 	'contextRoot' : '/activiti-webapp-explorer2-5.22.0/service',
+	// 'contextRoot' : '',
 };
